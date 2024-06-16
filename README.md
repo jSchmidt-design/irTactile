@@ -126,3 +126,11 @@ For every car you are driving a config file will be created in in the folder "/c
     "name": "Porsche 911 GT3 Cup (992)"
 }
 ```
+## Troubleshooting
+ - After device selection, application exists immediately after start.
+   Someting wrong with the selected device.
+    - Please delete `device_config.json` and choose a valid device.
+ - No UI
+   Either the window has been disabled or moved in strange position.
+    - Try deleting `config.json`. 
+
