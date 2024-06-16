@@ -44,6 +44,7 @@ Running irTactile is straightforward. Follow these steps to get started:
 
 4. **Demo Mode**
    - If you run the application in demo mode, a default signal will be sent to the active channel. You can scroll through the channels using the left/right arrow keys.
+   - You can start demo mode by executing `RunDemo.bat` or  `irTactile.exe -d`
 
 5. **Regular Mode Configuration**
    - Before running the app in regular mode, you need to assign the individual outputs to the sound card channels. This configuration is done in the `channel_config.json` file. You can use the provided file as a reference.
