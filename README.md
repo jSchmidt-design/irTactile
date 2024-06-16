@@ -19,7 +19,7 @@ The software is currently closed source, but I will release the sources as soon 
 
 - Support for multiple audio devices
 - Visualization for up to 16 audio channels
-- Compatibility with all cars that have regular suspension (Prototypes and Formula cars are currently not supported)
+- Compatibility with all cars that have regular suspension (Prototypes and some Formula cars are currently not supported)
 - Pre-configured settings for several cars
 - Automatic generation of default configurations for unsupported cars
 - Demo mode allowing testing of all channels
