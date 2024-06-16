@@ -40,6 +40,7 @@ Running irTactile is straightforward. Follow these steps to get started:
 
 3. **Select the Devices**
    - Choose the audio devices you want to use. Note that these devices must support a sampling rate of 48kHz.
+   - Please make sure to select a valid output device with the expected number of channels: i.e.  `Lautsprecher (Sound Blaster Z SE)| 48000 |6 | 0.003` and not `Was Sie hören (Sound Blaster Z SE)| 48000 |0 | 0` or `Digital-In (Sound Blaster Z SE)| 48000 |0 | 0`
 
 4. **Demo Mode**
    - If you run the application in demo mode, a default signal will be sent to the active channel. You can scroll through the channels using the left/right arrow keys.
