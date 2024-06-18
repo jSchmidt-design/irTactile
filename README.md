@@ -49,7 +49,8 @@ Running irTactile is straightforward. Follow these steps to get started:
 5. **Regular Mode Configuration**
    - Before running the app in regular mode, you need to assign the individual outputs to the sound card channels. This configuration is done in the `channel_config.json` file. You can use the provided file as a reference.
    
-   - For each device and channel where you want to output a signal, the following information is required. 
+   - For each device and channel where you want to output a signal, the following information is required.  
+
      ```json
      {
        "deviceID": "DEFAULT_1", // Select the device here
@@ -132,5 +133,206 @@ For every car you are driving a config file will be created in in the folder "/c
     - Please delete `device_config.json` and choose a valid device.
  - No UI
    Either the window has been disabled or moved in strange position.
-    - Try deleting `config.json`. 
+    - Try deleting `config.json`.
+  
+## Channel Configuration  
 
+Channel configuration is achieved by mixing the different sources to one output. 
+Channel are identified by the index [0... Channel Count-1].
+Most streams are offering 4 values. 
+
+0: Front Left\
+1: Front Right\
+3: Rear Left\
+4: Rear Right
+
+A basic configuration which would add front left suspension data to channel one would look like this:
+
+```json
+[
+    {
+        "deviceID": "DEFAULT_1",
+        "channels": [
+            {
+                "gain": 1,
+                "id": 0,
+                "limiterGain": 1,
+                "limiterGamma": 1.0,
+                "limiterThreshold": 1.0,
+                "sources": [
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 0,
+                        "streamId": "SUSPENSION_LFE"
+                    }
+                ]
+            }
+        ]
+    }
+]
+
+```
+
+
+To add one more source, an additional entry has to be added. This will output i.e. Front Left and Front Right data to channel 0 from device DEFAULT_1
+
+```json
+[
+    {
+        "deviceID": "DEFAULT_1",
+        "channels": [
+            {
+                "gain": 1,
+                "id": 0,
+                "limiterGain": 10,
+                "limiterGamma": 1.5,
+                "limiterThreshold": 1.0,
+                "sources": [
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 0,
+                        "streamId": "SUSPENSION_LFE"
+                    },
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 1,
+                        "streamId": "SUSPENSION_LFE"
+                    }
+                ]
+            }
+        ]
+    }
+]
+
+```
+If we want to add the Rear Left and Rear Right suspension to channel two of the same device, the following config would be used:
+
+```json
+[
+    {
+        "deviceID": "DEFAULT_1",
+        "channels": [
+            {
+                "gain": 1,
+                "id": 0,
+                "limiterGain": 10,
+                "limiterGamma": 1.5,
+                "limiterThreshold": 1.0,
+                "sources": [
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 0,
+                        "streamId": "SUSPENSION_LFE"
+                    },
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 1,
+                        "streamId": "SUSPENSION_LFE"
+                    }
+                ]
+            },
+            {
+                "gain": 1.0,
+                "id": 1,
+                "limiterGain": 1,
+                "limiterGamma": 1,
+                "limiterThreshold": 1.0,
+                "sources": [
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 2,
+                        "streamId": "SUSPENSION_LFE"
+                    },
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 3,
+                        "streamId": "SUSPENSION_LFE"
+                    }
+                ]
+            }
+        ]
+    }
+]
+
+```
+
+the following config is adding output to channel 3. Here the two low frequency streams for rear suspension are combined.
+To keep the overall output a little bit lower each source gain is reduced by 0.7 and an additional limiter is activated which will trigger when amplitudes are above 0.7  
+```json
+[
+    {
+        "deviceID": "DEFAULT_1",
+        "channels": [
+            {
+                "gain": 1,
+                "id": 0,
+                "limiterGain": 10,
+                "limiterGamma": 1.0,
+                "limiterThreshold": 1.0,
+                "sources": [
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 0,
+                        "streamId": "SUSPENSION_LFE"
+                    },
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 1,
+                        "streamId": "SUSPENSION_LFE"
+                    }
+                ]
+            },
+            {
+                "gain": 1.0,
+                "id": 1,
+                "limiterGain": 1,
+                "limiterGamma": 1,
+                "limiterThreshold": 1.0,
+                "sources": [
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 2,
+                        "streamId": "SUSPENSION_LFE"
+                    },
+                    {
+                        "gain": 1.0,
+                        "streamAttribute": 3,
+                        "streamId": "SUSPENSION_LFE"
+                    }
+                ]
+            },
+            {
+                "gain": 1.0,
+                "id": 3,
+                "limiterGain": 3,
+                "limiterGamma": 1,
+                "limiterThreshold": 0.7,
+                "sources": [
+                    {
+                        "gain": 0.7,
+                        "streamAttribute": 2,
+                        "streamId": "SUSPENSION_q10"
+                    },
+                    {
+                        "gain": 0.7,
+                        "streamAttribute": 3,
+                        "streamId": "SUSPENSION_q10"
+                    },
+                    {
+                        "gain": 0.7,
+                        "streamAttribute": 2,
+                        "streamId": "SUSPENSION_LFE"
+                    },
+                    {
+                        "gain": 0.7,
+                        "streamAttribute": 3,
+                        "streamId": "SUSPENSION_LFE"
+                    }
+                ]
+            }
+        ]
+    }
+]
+
+
+```
