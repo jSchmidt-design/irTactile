@@ -78,7 +78,7 @@ In general "WASAPI" should be selected, but there is also an experimental versio
 In a second step the actual device can be selected.  
 ![Image description](device_selection2.png)
 
- 
+Some sound cards report a higher number of channels than are actually present. In this case select the correct value, during configuration.
 
 **In theory irTactile supports multiple output devices. But this is currently increasing highly the latency and is not recommended!**
 
@@ -116,22 +116,22 @@ Out of the box the following streams are provided:
 For each channel the following parameters can be adjusted:  
 ![Image description](channel_parameter.png)
 
-- Description  
+- **Description**
 Assign a name to identify the channel easily
-- ChannelNr  
-  Select the channel where the output should be routed.
-  **Make sure that same channel is not selected multiple times!!!**
-- Gain  
+- **ChannelNr**
+  Select the channel where the output should be routed.  
+  *Make sure that same channel is not selected multiple times!!!*
+- **Gain**
   Controls the final volume of the channel
-- Limiter  
+- **Limiter**
   In case the final mix might have peaks beyond the clipping range, this can be used to bring the peaks down without having to reduce the volume overall. 
-  - Threshold  
+  - **Threshold**
     Controls when limiter starts working
-  - Gain  
+  - **Gain**
     Controls how much the gain should be reduced in case the signal is above the threshold
-- HighPass Filter  (2nd order Butterworth. Gain reduction -3db at cutoff frequency)  
+- **HighPass Filter**  (2nd order Butterworth. Gain reduction -3db at cutoff frequency)  
   Filters out frequencies below the provided value. 
-- LowPass Filter (2nd order Butterworth. Gain reduction -3db at cutoff frequency)  
+- **LowPass Filter** (2nd order Butterworth. Gain reduction -3db at cutoff frequency)  
   Filters out frequencies above the provided value. 
 
 **It is possible to provide more mappings than the channel number of the device. Again make sure that the real channels are referenced only once.**
@@ -237,6 +237,8 @@ TBD
     - Try deleting `config.json`.
 - No signal 
   - Check if Demo Mode is active. 
+- No sound signal even though demo mode is active
+  - In demo mode only simple waves can be played. I.e. (TestSignal50Hz) 
 - Soundblaster z SE not working in WASAPI exclusive mode.
   - Known issue with this sound card. Do not activate exclusive mode. 
 - Changes in the editor are not reflected.
