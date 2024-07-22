@@ -185,6 +185,11 @@ The sources for an audio stream are the actual data sources offered by irTactile
   - Attribute 1: Front Slip (under steer) low frequency
   - Attribute 2: Rear Slip (over steer) low frequency
   - Attribute 3: Rear Slip (over steer) low frequency
+- **G_FORCES**: G-Force data as exposed by iRacing.  
+  - Attribute 0: G-Forces along x-Axis
+  - Attribute 1: G-Forces along y-Axis
+  - Attribute 2: G-Forces along z-Axis
+  - Attribute 3: unused
 
 Finally for each stream the following parameters can be applied:
 
