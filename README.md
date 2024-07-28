@@ -68,19 +68,22 @@ Running irTactile is straightforward.
 - When everything looks good connect the amps/shakers and slowly increase volume
 
 ## Device Selection
-When you start the application for the first time, you will be prompted to select the output device. To re-run the configuration you have to delete device_config.json in the root directory.
+When you start irTactile.exe for the first time, you will be prompted to select the output device. To re-run the configuration you have to delete device_config.json in the root directory.
+Alternatively you can launch device configuration from the editor in the "Devices" section as well. 
 
 First step of the configuration process is to select the driver. 
-In general "WASAPI" should be selected, but there is also an experimental version which allows selection of ASIO which should allow even lower latencies.
+In general "WASAPI" should be selected.
 
-![Image description](api_selection.png)
+![Image description](device_selection_ui.png)
 
-In a second step the actual device can be selected.  
-![Image description](device_selection2.png)
+In a second step the actual device can be selected. For irTactile the device needs to support 48k sampling rate. If you select a device which shows a different number, irTactile will try to open the device with 48k anyhow. If this is not supported by the device, the application will terminate. In this case the sampling rate should be changed in windows settings.  
 
-Some sound cards report a higher number of channels than are actually present. In this case select the correct value, during configuration.
+![Image description](device_selection_ui2.png)
 
-**In theory irTactile supports multiple output devices. But this is currently increasing highly the latency and is not recommended!**
+In the last some device parameters can be configured. Check Output Device Tuning for more details. 
+
+![Image description](device_selection3_ui.png)
+
 
 ## Channel Mapping
 
