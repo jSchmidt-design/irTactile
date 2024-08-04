@@ -189,9 +189,9 @@ The sources for an audio stream are the actual data sources offered by irTactile
   - Attribute 2: Rear Slip (over steer) low frequency
   - Attribute 3: Rear Slip (over steer) low frequency
 - **G_FORCES**: G-Force data as exposed by iRacing.  
-  - Attribute 0: G-Forces along x-Axis
-  - Attribute 1: G-Forces along y-Axis
-  - Attribute 2: G-Forces along z-Axis
+  - Attribute 0: Longitudinal G-Forces
+  - Attribute 1: Lateral G-Forces
+  - Attribute 2: Vertical G-Forces
   - Attribute 3: unused
 
 Finally for each stream the following parameters can be applied:
@@ -234,7 +234,32 @@ The simplest solution is to connect head phones or loudspeakers to the sound car
 
 ## Car specific configuration
 
-TBD
+As soon as a car is driven for the first time a default configuration file will be created. The individual parameters can be adjusted in the cars section of the editor. 
+![Image description](car_setup.png)
+
+- **Gear Shift**
+  - Shift Time: Controls the length of the shift impulse in milliseconds
+  - Intensity: Controls the volume of the signal in dB
+- **Engine**
+  - Cylinder: Number of cylinders to be used for simulation
+  - Pressure: Controls how the engine behaves under load. Lower values result in a rougher vibrations
+  - Intensity: Controls the volume of the signal in dB
+- **Suspension**
+  - Max Acceleration: Defines the impact acceleration value which will be mapped to max signal strength
+  - Min Velocity: All suspension movements will below the value will be ignored. 
+  - Gamma: Values smaller 1 will amplify low movements. Values bigger 1 will reduce signal strength of small impacts
+- **g Force**
+  - Max longitudinal force:  Defines the acceleration value which will be mapped to max signal strength
+  - Max lateral force: Defines the acceleration value which will be mapped to max signal strength 
+  - Max vertical force: Defines the acceleration value which will be mapped to max signal strength
+- **Slip**
+  - Max oversteer angle: Defines the oversteer angle value which will be mapped to max signal strength
+  - Max understeer angle: Defines the oversteer angle value which will be mapped to max signal strength
+  - Slip Factor: Magic number controls the zero point 
+  - Slip Intensity: Controls the volume of the signal in dB
+- **ABS Settings**
+  - Frequency: Abs frequency
+  - Intensity: Volume of the signal 
 
 ## Troubleshooting
  - After device selection, application exists immediately after start.
