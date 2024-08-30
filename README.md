@@ -89,14 +89,97 @@ In the last some device parameters can be configured. Check Output Device Tuning
 
 ![Image description](channel_assignment.png)
 
-irTactile provides some predefined audio streams. Those streams have to assigned to the individual channels of a device. 
+irTactile provides several predefined audio streams. Those streams can be assigned to the individual channels of a device. 
 Even if there is only one physical device configured you can define multiple channel mappings. Just make sure, that there is only one mapping targeting the actual device. This allows simple switching between the mappings i.e. for testing without actually modifying the real mapping. 
 
-Channel assignment involves two steps:
-- Mixing some input sources
-- Assigning the output to a channel
- 
- It is possible to mix an arbitrary number of audio sources. For each source a gain factor can be defined. The gain factors should be selected in a way that the individual streams are present in the final mix with the desired intensity while maintaining the overall signal strength at a reasonable level without introducing clipping. Mixing itself is achieved by simply adding the individual sources. 
+
+It is possible to mix an arbitrary number of audio streams. 
+For each channel as well as for each input stream it is possible define the desired gain as well as additional filters. The gain factors should be selected in a way that the individual streams are present in the final mix with the desired intensity while maintaining the overall signal strength at a reasonable level without introducing clipping. 
+
+
+
+Out of the box the following streams are provided:
+- **ABS**: ABS indicator as provided by iRacing. Cannot be sent directly to a channel.
+- **ABS_HR.\***: ABS signal.
+  - ABS_HR.1: base frequency
+  - ABS_HR.2: 2x base frequency
+  - ABS_HR.3: 3x base frequency
+  - ABS_HR.4: 4x base frequency
+- **INPUTS.\***: User Input.
+  - INPUTS.1: Throttle
+  - INPUTS.2: Brake
+  - INPUTS.3: Clutch
+  - INPUTS.4: -
+- **STATUS.\***: Status attributes.
+  - STATUS.1: Velocity
+  - STATUS.2: ABS Active
+  - STATUS.3: -
+  - STATUS.4: -
+- **ROAD\***: Suspension information to emulate road effects.
+  - ROAD.1: Front Left
+  - ROAD.2: Front Right
+  - ROAD.3: Rear Left
+  - ROAD.4  Rear Right
+- **SUSPENSION\***: Raw suspension information.
+  - SUSPENSION.1: Front Left
+  - SUSPENSION.2: Front Right
+  - SUSPENSION.3: Rear Left
+  - SUSPENSION.4: Rear Right
+- **SUSPENSION_HF\***: Suspension information with a moderate low-pass filter for shakers capable of outputting medium frequencies (e.g., BST300, BST1).
+  - SUSPENSION_HF.1: Front Left
+  - SUSPENSION_HF.2: Front Right
+  - SUSPENSION_HF.3: Rear Left
+  - SUSPENSION_HF.4: Rear Right
+- **SUSPENSION_LFE\***: Suspension information with a high low-pass filter for shakers capable of outputting low frequencies (e.g., BST300/LFE/Q10B).
+  - SUSPENSION_LFE.1: Front Left
+  - SUSPENSION_LFE.2: Front Right
+  - SUSPENSION_LFE.3: Rear Left
+  - SUSPENSION_LFE.4: Rear Right
+- **SUSPENSION_q10\***: Suspension information with a very high low-pass filter for shakers capable of outputting the lowest possible frequencies (e.g., LFE/Q10B).
+  - SUSPENSION_q10.1: Front Left
+  - SUSPENSION_q10.2: Front Right
+  - SUSPENSION_q10.3: Rear Left
+  - SUSPENSION_q10.4: Rear Right
+- **ENGINE_HR\***: Relative simple emulation of engine vibrations. Currently only inline engines are emulated.  
+  - ENGINE_HR.1: Original Engine Signal
+  - ENGINE_HR.2: 1/2 Frequency
+  - ENGINE_HR.3: 1/4 Frequency
+  - ENGINE_HR.4: 1/8 Frequency
+- **WHEEL_SLIP\***: Slip Signal. Since iRacing does not expose actual slip values. This is just an approximation. It provides similar feedback as turning up tires volume in iRacing.  
+  - WHEEL_SLIP.1: Front Slip (under steer) high frequency
+  - WHEEL_SLIP.2: Front Slip (under steer) low frequency
+  - WHEEL_SLIP.3: Rear Slip (over steer) low frequency
+  - WHEEL_SLIP.4: Rear Slip (over steer) low frequency
+- **G_FORCES\***: G-Force data as exposed by iRacing.  
+  - G_FORCES.1: Longitudinal G-Forces
+  - G_FORCES.2: Lateral G-Forces
+  - G_FORCES.3: Vertical G-Forces
+  - G_FORCES.4: unused
+
+In addition all custom streams can be assigned to a channel.  
+
+**It is possible to provide more mappings than the channel number of the device. Again make sure that the real channels are referenced only once.**
+
+## Audio Filter 
+![Image description](Filter.png) 
+
+As of now the following filters can be used to modify the stream:
+- **Low Pass**: 2nd order Butterworth. Gain reduction -3db at cutoff frequency.
+- **High Pass**: 2nd order Butterworth. Gain reduction -3db at cutoff frequency.
+- **Limiter**: In case the final mix might have peaks beyond the clipping range, this can be used to bring the peaks down without having to reduce the volume overall. 
+  - **Threshold**
+    Controls when limiter starts working
+  - **Gain**
+    Controls how much the gain should be reduced in case the signal is above the threshold
+- **Gamma**: Applies a gamma correction to the signal. Values >1 will reduce the output volume of low amplitudes. Values < 1 will increase the output for low amplitudes.
+- **Modulate**: Allows to modulate the input signal with a second signal.
+- **WaveSynth**: Generate a sinus wave based on the input signal.
+
+
+## Audio Mixer 
+![Image description](audio_streams.png)
+
+Audio Mixer allows creation of additional streams. Each stream is again a mix of any other combination of input streams ans filters. 
 
 Out of the box the following streams are provided:
 - **RearSuspension(MF)**: Rear Suspension signal Medium Frequency. Suitable for BST 300.
@@ -115,94 +198,11 @@ Out of the box the following streams are provided:
 - **TestSignal(16Hz)**: Sine Wave 16 Hz.
 - **TestSignal(50Hz)**: Sine Wave 50 Hz.
 
+## Custom Sources
+![Image description](static_waves.png)
+In addition to custom mixes it is also possible to define static sinus wave which can be used as audio sources in any mix. 
+Right now only simple sine waves are supported and For each wave a frequency can be specified. 
 
-For each channel the following parameters can be adjusted:  
-![Image description](channel_parameter.png)
-
-- **Description**
-Assign a name to identify the channel easily
-- **ChannelNr**
-  Select the channel where the output should be routed.  
-  *Make sure that same channel is not selected multiple times!!!*
-- **Gain**
-  Controls the final volume of the channel
-- **Limiter**
-  In case the final mix might have peaks beyond the clipping range, this can be used to bring the peaks down without having to reduce the volume overall. 
-  - **Threshold**
-    Controls when limiter starts working
-  - **Gain**
-    Controls how much the gain should be reduced in case the signal is above the threshold
-- **HighPass Filter**  (2nd order Butterworth. Gain reduction -3db at cutoff frequency)  
-  Filters out frequencies below the provided value. 
-- **LowPass Filter** (2nd order Butterworth. Gain reduction -3db at cutoff frequency)  
-  Filters out frequencies above the provided value. 
-
-**It is possible to provide more mappings than the channel number of the device. Again make sure that the real channels are referenced only once.**
-
-## Audio Streams 
-![Image description](audio_streams.png)
-
-To modify existing streams or create new custom audio streams navigate to "Audio Streams" section.
-The approach is very similar to channel mapping. But instead of assigning data to a channel a named stream is created. 
-The sources for an audio stream are the actual data sources offered by irTactile. Those are currently:
-
-- **ABS**: ABS indicator as provided by iRacing. Cannot be sent directly to a channel.
-- **ABS_HR**: ABS signal.
-  - Attribute 0: base frequency
-  - Attribute 1: 2x base frequency
-  - Attribute 2: 3x base frequency
-  - Attribute 3: 4x base frequency
-- **CLUTCH**: Clutch signal. Cannot be sent directly to a channel.
-- **ROAD**: Suspension information to emulate road effects.
-  - Attribute 0: Front Left
-  - Attribute 1: Front Right
-  - Attribute 2: Rear Left
-  - Attribute 3: Rear Right
-- **SUSPENSION**: Raw suspension information.
-  - Attribute 0: Front Left
-  - Attribute 1: Front Right
-  - Attribute 2: Rear Left
-  - Attribute 3: Rear Right
-- **SUSPENSION_HF**: Suspension information with a moderate low-pass filter for shakers capable of outputting medium frequencies (e.g., BST300, BST1).
-  - Attribute 0: Front Left
-  - Attribute 1: Front Right
-  - Attribute 2: Rear Left
-  - Attribute 3: Rear Right
-- **SUSPENSION_LFE**: Suspension information with a high low-pass filter for shakers capable of outputting low frequencies (e.g., BST300/LFE/Q10B).
-  - Attribute 0: Front Left
-  - Attribute 1: Front Right
-  - Attribute 2: Rear Left
-  - Attribute 3: Rear Right
-- **SUSPENSION_q10**: Suspension information with a very high low-pass filter for shakers capable of outputting the lowest possible frequencies (e.g., LFE/Q10B).
-  - Attribute 0: Front Left
-  - Attribute 1: Front Right
-  - Attribute 2: Rear Left
-  - Attribute 3: Rear Right
-- **ENGINE_HR**: Relative simple emulation of engine vibrations. Currently only inline engines are emulated.  
-  - Attribute 0: Original Engine Signal
-  - Attribute 1: 1/2 Frequency
-  - Attribute 2: 1/4 Frequency
-  - Attribute 3: 1/8 Frequency
-- **WHEEL_SLIP**: Slip Signal. Since iRacing does not expose actual slip values. This is just an approximation. It provides similar feedback as turning up tires volume in iRacing.  
-  - Attribute 0: Front Slip (under steer) high frequency
-  - Attribute 1: Front Slip (under steer) low frequency
-  - Attribute 2: Rear Slip (over steer) low frequency
-  - Attribute 3: Rear Slip (over steer) low frequency
-- **G_FORCES**: G-Force data as exposed by iRacing.  
-  - Attribute 0: Longitudinal G-Forces
-  - Attribute 1: Lateral G-Forces
-  - Attribute 2: Vertical G-Forces
-  - Attribute 3: unused
-
-Finally for each stream the following parameters can be applied:
-
-![Image description](stream_parameter.png)
-
-- Volume
-- HighPass Filter  (2nd order Butterworth. Gain reduction -3db at cutoff frequency)  
-  Filters out frequencies below the provided value. 
-- LowPass Filter (2nd order Butterworth. Gain reduction -3db at cutoff frequency)  
-  Filters out frequencies above the provided value. 
 
 ## Output Device Tuning
 After the initial device selection basic settings are applied which should work on most systems but thy are not offering the lowest possible latency. 
@@ -235,6 +235,7 @@ The simplest solution is to connect head phones or loudspeakers to the sound car
 ## Car specific configuration
 
 As soon as a car is driven for the first time a default configuration file will be created. The individual parameters can be adjusted in the cars section of the editor. 
+
 ![Image description](car_setup.png)
 
 - **Gear Shift**
@@ -245,21 +246,21 @@ As soon as a car is driven for the first time a default configuration file will 
   - Pressure: Controls how the engine behaves under load. Lower values result in a rougher vibrations
   - Intensity: Controls the volume of the signal in dB
 - **Suspension**
-  - Max Acceleration: Defines the impact acceleration value which will be mapped to max signal strength
-  - Min Velocity: All suspension movements will below the value will be ignored. 
+  - Max Acceleration: Defines the acceleration value of the impact on the suspension which will be mapped to max signal strength
+  - Min Velocity: All suspension movements below the value will be ignored. 
   - Gamma: Values smaller 1 will amplify low movements. Values bigger 1 will reduce signal strength of small impacts
 - **g Force**
-  - Max longitudinal force:  Defines the acceleration value which will be mapped to max signal strength
-  - Max lateral force: Defines the acceleration value which will be mapped to max signal strength 
-  - Max vertical force: Defines the acceleration value which will be mapped to max signal strength
+  - Max longitudinal force:  Defines the acceleration value which will be mapped to max signal strength in g
+  - Max lateral force: Defines the acceleration value which will be mapped to max signal strength in g
+  - Max vertical force: Defines the acceleration value which will be mapped to max signal strength in g
 - **Slip**
-  - Max oversteer angle: Defines the oversteer angle value which will be mapped to max signal strength
-  - Max understeer angle: Defines the oversteer angle value which will be mapped to max signal strength
+  - Max oversteer angle: Defines the oversteer angle in degrees which will be mapped to max signal strength
+  - Max understeer angle: Defines the oversteer angle in degrees which will be mapped to max signal strength
   - Slip Factor: Magic number controls the zero point 
   - Slip Intensity: Controls the volume of the signal in dB
 - **ABS Settings**
-  - Frequency: Abs frequency
-  - Intensity: Volume of the signal 
+  - Frequency: Abs frequency in Hz
+  - Intensity: Volume of the signal in dB 
 
 ## Troubleshooting
  - After device selection, application exists immediately after start.
