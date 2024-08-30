@@ -115,42 +115,42 @@ Out of the box the following streams are provided:
   - STATUS.2: ABS Active
   - STATUS.3: -
   - STATUS.4: -
-- **ROAD\***: Suspension information to emulate road effects.
+- **ROAD.\***: Suspension information to emulate road effects.
   - ROAD.1: Front Left
   - ROAD.2: Front Right
   - ROAD.3: Rear Left
   - ROAD.4  Rear Right
-- **SUSPENSION\***: Raw suspension information.
+- **SUSPENSION.\***: Raw suspension information.
   - SUSPENSION.1: Front Left
   - SUSPENSION.2: Front Right
   - SUSPENSION.3: Rear Left
   - SUSPENSION.4: Rear Right
-- **SUSPENSION_HF\***: Suspension information with a moderate low-pass filter for shakers capable of outputting medium frequencies (e.g., BST300, BST1).
+- **SUSPENSION_HF.\***: Suspension information with a moderate low-pass filter for shakers capable of outputting medium frequencies (e.g., BST300, BST1).
   - SUSPENSION_HF.1: Front Left
   - SUSPENSION_HF.2: Front Right
   - SUSPENSION_HF.3: Rear Left
   - SUSPENSION_HF.4: Rear Right
-- **SUSPENSION_LFE\***: Suspension information with a high low-pass filter for shakers capable of outputting low frequencies (e.g., BST300/LFE/Q10B).
+- **SUSPENSION_LFE.\***: Suspension information with a high low-pass filter for shakers capable of outputting low frequencies (e.g., BST300/LFE/Q10B).
   - SUSPENSION_LFE.1: Front Left
   - SUSPENSION_LFE.2: Front Right
   - SUSPENSION_LFE.3: Rear Left
   - SUSPENSION_LFE.4: Rear Right
-- **SUSPENSION_q10\***: Suspension information with a very high low-pass filter for shakers capable of outputting the lowest possible frequencies (e.g., LFE/Q10B).
+- **SUSPENSION_q10.\***: Suspension information with a very high low-pass filter for shakers capable of outputting the lowest possible frequencies (e.g., LFE/Q10B).
   - SUSPENSION_q10.1: Front Left
   - SUSPENSION_q10.2: Front Right
   - SUSPENSION_q10.3: Rear Left
   - SUSPENSION_q10.4: Rear Right
-- **ENGINE_HR\***: Relative simple emulation of engine vibrations. Currently only inline engines are emulated.  
+- **ENGINE_HR.\***: Relative simple emulation of engine vibrations. Currently only inline engines are emulated.  
   - ENGINE_HR.1: Original Engine Signal
   - ENGINE_HR.2: 1/2 Frequency
   - ENGINE_HR.3: 1/4 Frequency
   - ENGINE_HR.4: 1/8 Frequency
-- **WHEEL_SLIP\***: Slip Signal. Since iRacing does not expose actual slip values. This is just an approximation. It provides similar feedback as turning up tires volume in iRacing.  
+- **WHEEL_SLIP.\***: Slip Signal. Since iRacing does not expose actual slip values. This is just an approximation. It provides similar feedback as turning up tires volume in iRacing.  
   - WHEEL_SLIP.1: Front Slip (under steer) high frequency
   - WHEEL_SLIP.2: Front Slip (under steer) low frequency
   - WHEEL_SLIP.3: Rear Slip (over steer) low frequency
   - WHEEL_SLIP.4: Rear Slip (over steer) low frequency
-- **G_FORCES\***: G-Force data as exposed by iRacing.  
+- **G_FORCES.\***: G-Force data as exposed by iRacing.  
   - G_FORCES.1: Longitudinal G-Forces
   - G_FORCES.2: Lateral G-Forces
   - G_FORCES.3: Vertical G-Forces
