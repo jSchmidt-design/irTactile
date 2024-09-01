@@ -1,6 +1,8 @@
 
 # irTactile 
 
+![Image description](app_screenshot.png)
+
 irTactile is a tool designed to generate audio output to drive bass shakers using iRacing telemetry data.
 
 Initially the goal was to provide the most realistic suspension effects, but in the mean time a full set effects is available:
@@ -25,7 +27,6 @@ The big advantages if irTactile compared with other application is:
 The application is in a very early alpha phase. Please do not expect that everything is working perfectly. 
 
 The software is currently closed source, but I will release the sources as soon as i find the time to cleanup the code. 
-![Image description](app_screenshot.png)
 
 
 
