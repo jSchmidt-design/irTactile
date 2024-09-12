@@ -197,6 +197,11 @@ Out of the box the following streams are provided:
 As of now the following filters can be used to modify the stream:
 - **Low Pass**: 2nd order Butterworth. Gain reduction -3db at cutoff frequency.
 - **High Pass**: 2nd order Butterworth. Gain reduction -3db at cutoff frequency.
+- **Peaking Filter**: In case the final mix might have peaks beyond the clipping range, this can be used to bring the peaks down without having to reduce the volume overall. 
+  - **Frequency**: Center frequency.
+  - **Q Factor**: Q controls the width/steepness of the filter.
+  - **Gain**: Boost/Cut.
+- **EQ**: An Equalizer based on multiple peaking filters. REW generated filter can be directly imported.
 - **Limiter**: In case the final mix might have peaks beyond the clipping range, this can be used to bring the peaks down without having to reduce the volume overall. 
   - **Threshold**
     Controls when limiter starts working
@@ -219,9 +224,15 @@ Filters can be activated/deactivated individually or the whole filter chain can 
   
 ## Custom Sources
 ![Image description](static_waves.png)
-In addition to custom mixes it is also possible to define static sinus wave which can be used as audio sources in any mix. 
-Right now only simple sine waves are supported.
 
+In addition to custom mixes it is also possible to define static sinus wave which can be used as audio sources in any mix. 
+Three types of sources are supported:
+- **Sine waves**: Basic Sine wave.
+- **Sweeps**: Three different sweeps can be selected.
+  -  Sweep with constant amplitude
+  -  Sweep with constant velocity
+  -  Sweep with constant acceleration
+- **Noise**: Pink/White Noise.
 
 ## Output Device Tuning
 After the initial device selection basic settings are applied which should work on most systems but thy are not offering the lowest possible latency. 
