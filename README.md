@@ -106,10 +106,10 @@ Out of the box the following streams are provided:
   - INPUTS.3: Clutch
   - INPUTS.4: -
 - **STATUS.\***: Status attributes.
-  - STATUS.1: Velocity
-  - STATUS.2: ABS Active
-  - STATUS.3: Steering Tourque
-  - STATUS.4: Steering Tourque (including direction)
+  - STATUS.1: ABS Active
+  - STATUS.2: Velocity
+  - STATUS.3: Steering Torque
+  - STATUS.4: Steering Torque (including direction)
 - **SUSPENSION_VELOCITY.\***: Experimental signal based on suspension velocity.
   - SUSPENSION_VELOCITY.1: Front Left
   - SUSPENSION_VELOCITY.2: Front Right
