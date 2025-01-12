@@ -3,7 +3,9 @@
 
 ![Image description](app_screenshot.png)
 
-irTactile is a tool designed to generate audio output to drive bass shakers using iRacing telemetry data.
+irTactile is a tool designed to generate audio output to drive bass shakers using telemetry data provided by racing simulators.
+
+Initially the app supported iRacing only. With version 0.4.0 support for "Automobilista 2" and "Le Mans Ultimate" has been added.
 
 Initially the goal was to provide the most realistic suspension effects, but in the mean time a full set effects is available:
 1. Suspension\
@@ -23,13 +25,12 @@ The big advantages if irTactile compared with other application is:
 - Extreme flexibility to compose the final signal
 - Built in filters which make external (hardware/software) solutions obsolete
 - Supports for sound cards with more than 8 channels
-
-The application is in a very early alpha phase. Please do not expect that everything is working perfectly. 
-
-The software is currently closed source, but I will release the sources as soon as i find the time to cleanup the code. 
+- The application is ASIO compatible
 
 
+![Image description](ASIO-compatible-logo-Steinberg-TM-BW.jpg)
 
+NOTE: The application is in a very early alpha phase. Please do not expect that everything is working perfectly. 
 
 # irTactile Documentation
 irTactile can be executed in three different modes:
@@ -64,7 +65,8 @@ When you start irTactile.exe for the first time, you will be prompted to select 
 Alternatively you can launch device configuration from the editor in the "Devices" section as well. 
 
 First step of the configuration process is to select the driver. 
-In general "WASAPI" should be selected.
+
+For consumer grade devices in general "WASAPI" should be selected. With version 0.4.0 also ASIO compatible devices can be used directly. 
 
 ![Image description](device_selection_ui.png)
 
@@ -125,26 +127,6 @@ Out of the box the following streams are provided:
   - SUSPENSION.2: Front Right
   - SUSPENSION.3: Rear Left
   - SUSPENSION.4: Rear Right
-- **ROAD.\***: Suspension information to emulate road effects.
-  - ROAD.1: Front Left
-  - ROAD.2: Front Right
-  - ROAD.3: Rear Left
-  - ROAD.4  Rear Right
-- **SUSPENSION_HF.\***: Suspension information which emphesize high frequencies for shakers capable of outputting medium to high frequencies (e.g., BST300, BST1).
-  - SUSPENSION_HF.1: Front Left
-  - SUSPENSION_HF.2: Front Right
-  - SUSPENSION_HF.3: Rear Left
-  - SUSPENSION_HF.4: Rear Right
-- **SUSPENSION_LFE.\***: Suspension information which emphesize low frequencies for shakers capable of outputting low frequencies (e.g., BST300/LFE/Q10B).
-  - SUSPENSION_LFE.1: Front Left
-  - SUSPENSION_LFE.2: Front Right
-  - SUSPENSION_LFE.3: Rear Left
-  - SUSPENSION_LFE.4: Rear Right
-- **SUSPENSION_q10.\***: Suspension information which emphesize ultra low frequencies for shakers capable of outputting very low frequencies (e.g., LFE/Q10B).
-  - SUSPENSION_q10.1: Front Left
-  - SUSPENSION_q10.2: Front Right
-  - SUSPENSION_q10.3: Rear Left
-  - SUSPENSION_q10.4: Rear Right
 - **ENGINE_HR.\***: Relative simple emulation of engine vibrations. Currently only inline engines are emulated.  
   - ENGINE_HR.1: Original Engine Signal
   - ENGINE_HR.2: 1/2 Frequency
@@ -233,7 +215,8 @@ Three types of sources are supported:
   -  Sweep with constant velocity
   -  Sweep with constant acceleration
 - **Noise**: Pink/White Noise.
-
+- **Wav File**: Allows to play back a wav file. Only files with a sampling rate of 48Khz are supported.
+- 
 ## Output Device Tuning
 After the initial device selection basic settings are applied which should work on most systems but thy are not offering the lowest possible latency. 
 
