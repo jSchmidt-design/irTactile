@@ -45,11 +45,11 @@ The audio streams can then be mixed and processed by various audio filters befor
 irTactile can be executed in three different modes:
 
 1. Live Mode\
-   In this mode the application waits for an active iRacing sessions. iRacing has to be running and the car must be on track. 
+   In this mode the application waits for an active iRacing sessions. Simulator has to be running and the car must be on track. 
 2. Replay Mode (Demo mode checked and replay file selected)\
-   In this mode an output will be generated based on a pre recorded file. iRacing is not required to run.
+   In this mode an output will be generated based on a pre recorded file. Simulator is not required to run. Only supported for iRacing. 
 3. Demo mode (Demo mode checked and no replay file selected)\
-   In this mode only output based on the "static" wave files is generated. All other signals are zero. 
+   In this mode only output based on the "static" signals are being played All other signals are silenced. Simulator is not required to run.
 
 ## Getting Started
 
@@ -69,13 +69,18 @@ Running irTactile is straightforward.
 - Make sure that the signals shown in the preview screen look good/reasonable.
 - When everything looks good connect the amps/shakers and slowly increase volume.
 - If not using a prebuilt profile, it is best to start from scratch and slowly improve the setup.
-  - Start with suspension. 
+  - Start with suspension first. 
     - Depending on configuration go with front/back configuration or mix all 4 suspension signals.
     - Apply LP/HP filters which are matching the used shakers
     - Adjust the gain.
   - Add Gear
   - Add Engine
+    - Engine works best when all 4 signals are being used.
+    - Assign the first signal to the shaker suitable for the given frequency range and adjust the gain. 
+    - Repeat for all other signals individually
+    - Activate all 4 signals and perform fine tuning
 
+A more advanced guideline for profile creation will be released in the future.
 
 ## Device Selection
 When you start irTactile.exe for the first time, you will be prompted to select the output device. To re-run the configuration you have to delete device_config.json in the root directory.
@@ -91,7 +96,7 @@ In a second step the actual device can be selected. For irTactile the device nee
 
 ![Image description](device_selection_ui2.png)
 
-In the last some device parameters can be configured. Check Output Device Tuning for more details. 
+Finally some device parameters can be configured. Check Output Device Tuning for more details. 
 
 ![Image description](device_selection3_ui.png)
 
@@ -153,7 +158,7 @@ Out of the box the following streams are provided:
   - SUSPENSION.2: Front Right
   - SUSPENSION.3: Rear Left
   - SUSPENSION.4: Rear Right
-- **ENGINE.\***: Relative simple emulation of engine vibrations. The 4 signals provide vibrations across the whole rpm range of the engine but focus at different frequency ranges.  
+- **ENGINE.\***: Relative simple emulation of engine vibrations. The 4 signals provide vibrations across the whole rpm range of the engine but provide a signal in different frequency ranges.  
   - ENGINE.1: Engine in ultra low frequency range
   - ENGINE.2: Low frequency range
   - ENGINE.3: Mid frequency range
@@ -193,29 +198,43 @@ As of now the following filters can be used to modify the stream:
   - **Q Factor**: Q controls the width/steepness of the filter.
   - **Gain**: Boost/Cut.
 - **EQ**: An Equalizer based on multiple peaking filters. REW generated filter can be directly imported.
+- **Gain**: Additional option to modify the gain of a signa.
 - **Limiter**: In case the final mix might have peaks beyond the clipping range, this can be used to bring the peaks down without having to reduce the volume overall. 
   - **Threshold**
     Controls when limiter starts working
   - **Gain**
     Controls how much the gain should be reduced in case the signal is above the threshold
-- **Compressor**:  
+- **Compressor**:  Allows reducing the dynmaic range of a signal
   - **Threshold**
-    TBD
+    Controls when compressor starts working.
+  - **Ratio**
+    Signal gain above ratio will be reduced by this ratio
   - **Attack**
-    TBD
+    Controls how quickly the compressor reacts when gain is above threshold
   - **Release**
-    TBD
+    Controls how quickly the compressor reacts when gains falls below threshold
   - **Gain**
-    TBD
+    Gain to rais signal strength after compression
 - **Gate**: Filters our signal below threshold. 
   - **Threshold**
-    TBD
+    Signals below threshold are filtered
   - **Attack**
-    TBD
+    Controls how quick the gate reacts when gain goes about the threshold
   - **Release**
-    TBD
+    Controls how quick the gate reacts when gain goes below the threshold
+  - **Hold**
+    Controls how long the gate remains open after gain is below threshold
+- **Trigger**:  Generates a controll signal [0..1] based on the input signal
+  - **Threshold**
+    Threshold when trigger should be activated
+  - **Attack**
+    Controls how quickly the trigger reacts when gain is above threshold
+  - **Release**
+    Controls how quickly the trigger reacts when gains falls below threshold
   - **Gain**
-    TBD
+    Controlls the final gain of the trigger signal
+  - **Envelop**
+    Changes the behavior of the trigger. Instead of simple on/off behaviour the trigger is trying to follow the envelope of the input signal.
 - **Gamma**: Applies a gamma correction to the signal. As this is a non linear transformation, distortion is introduced.
 Values >1 will reduce the output volume of low amplitudes. Values < 1 will increase the output for low amplitudes.
 - **Modulate**: Allows to modulate the input signal with a second signal. 
