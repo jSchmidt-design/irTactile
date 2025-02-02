@@ -35,6 +35,12 @@ The big advantages if irTactile compared with other application is:
 
 NOTE: The application is in a very early alpha phase. Please do not expect that everything is working perfectly. 
 
+# Concept
+
+The basic idea of irTactile is to take the telemetry data offered by the simulator and convert it in a set of audio streams. 
+The audio streams can then be mixed and processed by various audio filters before being send to a specific channel of the sound card. 
+![Image description](irTactile.png)
+
 # irTactile Documentation
 irTactile can be executed in three different modes:
 
@@ -58,9 +64,17 @@ Running irTactile is straightforward.
 
 **Important: irTactile can potentially generate signals which can damage a shaker**
 
+- Make sure that audio device is configured correctly. See the buffer configuration chapter for details.
 - Test first without amplifiers/shakers connected. 
-- Make sure that the signals shown in the preview screen look good/reasonable
-- When everything looks good connect the amps/shakers and slowly increase volume
+- Make sure that the signals shown in the preview screen look good/reasonable.
+- When everything looks good connect the amps/shakers and slowly increase volume.
+- If not using a prebuilt profile, it is best to start from scratch and slowly improve the setup.
+  - Start with suspension. 
+    - Depending on configuration go with front/back configuration or mix all 4 suspension signals.
+    - Apply LP/HP filters which are matching the used shakers
+    - Adjust the gain.
+  - Add Gear
+  - Add Engine
 
 
 ## Device Selection
@@ -81,7 +95,7 @@ In the last some device parameters can be configured. Check Output Device Tuning
 
 ![Image description](device_selection3_ui.png)
 
-## Channel Mapping
+## Simulator Selection
 
 Select the simulator which should be used as data source. Available options are:
 
@@ -89,12 +103,14 @@ Select the simulator which should be used as data source. Available options are:
 - Le Mans Ultimate 
 - Automobilista 2
 
+Whenever switching the simulator, irTactile has to be restarted. 
+
 ## Channel Mapping
 
 ![Image description](channel_assignment.png)
 
 irTactile works like an audio mixer console. To get any output the available audio sources have to be routed to a channel of a specific audio device. 
-Even if there is only one physical device configured it is possible to define multiple channel mappings. But only the mapping which points to the currently configred audio device will be active. This allows simple switching between the mappings i.e. for testing without actually modifying the real mapping. 
+Even if there is only one physical device configured it is possible to define multiple channel mappings. But only the mapping which points to the currently configured audio device will be active. This allows simple switching between the mappings i.e. for testing without actually modifying the real mapping. 
 
 Channel mapping not only allows to route a stream to a channel. It is also possible to apply filters and or mix multiple audio streams. More details are provided in the Audio Mixer section. 
 
@@ -137,11 +153,11 @@ Out of the box the following streams are provided:
   - SUSPENSION.2: Front Right
   - SUSPENSION.3: Rear Left
   - SUSPENSION.4: Rear Right
-- **ENGINE_HR.\***: Relative simple emulation of engine vibrations. Currently only inline engines are emulated.  
-  - ENGINE_HR.1: Original Engine Signal
-  - ENGINE_HR.2: 1/2 Frequency
-  - ENGINE_HR.3: 1/4 Frequency
-  - ENGINE_HR.4: 1/8 Frequency
+- **ENGINE.\***: Relative simple emulation of engine vibrations. The 4 signals provide vibrations across the whole rpm range of the engine but focus at different frequency ranges.  
+  - ENGINE.1: Engine in ultra low frequency range
+  - ENGINE.2: Low frequency range
+  - ENGINE.3: Mid frequency range
+  - ENGINE.4: High frequency range
 - **WHEEL_SLIP.\***: Slip Signal. Since iRacing does not expose actual slip values. This is just an approximation. It provides similar feedback as turning up tires volume in iRacing.  
   - WHEEL_SLIP.1: Front Slip (under steer) high frequency
   - WHEEL_SLIP.2: Front Slip (under steer) low frequency
@@ -164,24 +180,7 @@ Additional streams can be created in the Audio Mixer or by defining static strea
 
 Audio Mixer allows creation of additional streams. Each stream is a mix of any other combination of input streams and filters. 
 
-Filters can be assinged to the individual streams and globally for the final output. 
-
-Out of the box the following streams are provided:
-- **RearSuspension(MF)**: Rear Suspension signal Medium Frequency. Suitable for BST 300.
-- **Rear Suspension(LF)**: Rear Suspension signal Low Frequency. Suitable for LFE/Q10B.
-- **Rear Suspension(ULF)**: Rear Suspension signal Ultra Low Frequency. Suitable for Q10B.
-- **Front Suspension(MF)**: Front Suspension signal Medium Frequency. Suitable for BST 300.
-- **Front Suspension(ULF)**: Front Suspension signal Ultra Low Frequency. Suitable for Q10B.
-- **Engine (MF)**: Engine signal Medium Frequency. Suitable for BST 300.
-- **Engine (LF)**: Engine signal Low Frequency. Suitable for LFE/Q10B.
-- **Gear**: Gear Shifting signal. Suitable for BST 300/LFE/Q10B.
-- **ABS**: ABS  signal. Suitable for MQB1.
-- **SlipFront(HF)**: Under steer signal High Frequency. Suitable for BST 300.
-- **Slip Front(LF)**: Under steer signal Low Frequency. Suitable for LFE/Q10B.
-- **Slip Rear(HF)**: Over steer signal High Frequency. Suitable for BST 300.
-- **Slip Rear(LF)**: Over steer signal Low Frequency. Suitable for LFE/Q10B.
-- **TestSignal(16Hz)**: Sine Wave 16 Hz.
-- **TestSignal(50Hz)**: Sine Wave 50 Hz.
+Filters can be assigned to the individual streams and globally for the final output. 
 
 ## Audio Filter 
 ![Image description](Filter.png) 
@@ -199,6 +198,24 @@ As of now the following filters can be used to modify the stream:
     Controls when limiter starts working
   - **Gain**
     Controls how much the gain should be reduced in case the signal is above the threshold
+- **Compressor**:  
+  - **Threshold**
+    TBD
+  - **Attack**
+    TBD
+  - **Release**
+    TBD
+  - **Gain**
+    TBD
+- **Gate**: Filters our signal below threshold. 
+  - **Threshold**
+    TBD
+  - **Attack**
+    TBD
+  - **Release**
+    TBD
+  - **Gain**
+    TBD
 - **Gamma**: Applies a gamma correction to the signal. As this is a non linear transformation, distortion is introduced.
 Values >1 will reduce the output volume of low amplitudes. Values < 1 will increase the output for low amplitudes.
 - **Modulate**: Allows to modulate the input signal with a second signal. 
@@ -274,7 +291,7 @@ I.e. If device buffer is 32, multiplicator 10 can be used. If device buffer is 6
 
 If there are clicking noises the buffer multiplicator has to be increased. If the output is clean the multiplicator can be reduced as long as there are no clicking noises. 
 
-If the total buffer needs to be increased above 400 byte, "Latency Compensation" can be enabled. For ASIO the values need to be kept very low 10%-20%. For WASAPI 10%-50% can be a valid range.     
+If the total buffer needs to be increased above 400 byte, "Latency Compensation" can be enabled. For ASIO the values need to be kept very low 10%-20%. For WASAPI 10%-50% can be a valid range. But this has to be tested for each sound card individually    
 
 
 ## Car specific configuration
