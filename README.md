@@ -19,9 +19,13 @@ Initially the goal was to provide the most realistic suspension effects, but in 
 
 With version 0.4.0 irTactile can be used for the following simulators
 * iRacing
-* "Automobilista 2"
-* "Le Mans Ultimate"
+* Automobilista 2
+* Le Mans Ultimate
+* Assetto Corsa EVO
 
+Version 0.5.0 introduced in addition
+* Richard Burns Rally
+  
 The big advantages if irTactile compared with other application is:
 - Very realistic suspension signal
 - Ultra low latency
