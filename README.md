@@ -104,6 +104,79 @@ Finally some device parameters can be configured. Check Output Device Tuning for
 
 ![Image description](device_selection3_ui.png)
 
+
+| Attribute        | Description                          |
+|------------------|--------------------------------------|
+| Name             | Name of the device    |
+| Output channels             | Number of output channels.<br> For ASIO devices it is possible to select only a subset of the available channels                 |
+| Input channels       | Number of input channels.<br> For ASIO devices it is possible to select only a subset of the available channels     |
+| Gain        |Output gain for the device. This gain is applied as final stage|
+| Exclusive Mode        | WASAPI only feature. <br>Reduces device latency by bypassing the windows audio mixer for the device. <br> If activated only irTactile will be able to use the device.  |
+| Clock Drift Compensation       | All devices are using their own clocks. Values bigger than zero try to componsate fot the differences between the clocks. <br> Increases CPU load  |
+| Device Buffer Size      | Controls in which chunk size data is sent/read to/from the device |
+| Application Buffer Size      | Hint for the application buffer size.  |
+
+## Output Device Tuning
+After the initial device selection basic settings are applied which should work on most systems but thy are not offering the lowest possible latency. 
+
+irTactile provides the following tuning parameters:
+- Exclusive Mode (when WASAPI is being used)
+  - If enabled:
+    - Windows internal mixer is by-passed
+    - All audio enhancements are disabled (i.e. Equalizer APO)
+    - Audio volume is only controlled by irTactile
+  - Not supported by all devices
+- Device Buffer Size
+- Application Buffer Size
+- Clock Drift Compensation 
+
+![Image description](device_options.png)
+
+To achieve the lowest possible latency it is best to use ASIO if supported by the device. Second best option is WASAPI in exclusive mode. 
+
+Next step is to identify the lowest possible buffers sizes. The simplest solution is to connect head phones or loudspeakers to the sound card, route an audible test signal to the correct channel and observe the output. 
+
+Simple sine waves (20Hz, 50Hz, 100Hz) are best to detect buffer overflows/underruns. System load might affect the results. So it is important to run all tests while the simulator is running.
+
+### Device Buffer Tuning
+
+Especially for ASIO devices it is important to select the correct device buffer size. But it applies to WASAPI mode as well. Goal is to find the lowest possible buffer size which allows a clean playback without any audible artifacts. A powerful PC and a good sound card should allow values between 32-64 samples. 
+
+Start with a buffer size of 32. If there are clicking noises repeat with the next higher size. 
+
+Important: For ASIO this number should be the same as it is configured for the output device in the ASIO driver. On some devices this is setup  automatically when changing the buffer size in irTactile. Other devices require to set the buffer size manually.  
+
+### Application Buffer Tuning
+
+The application buffer size controls how many audio samples are kept in a buffer. Signal generation and signal consumption are running in separate process and with slightly different clocks. To compensate for the clock differences a buffer is required. The configuration is not an exact value but just a hint. irTactile will try to adjust its internal timers to keep the buffer in average at the specified value. The goal is to choose the smallest possible value, which will not result in buffer underruns. Setting the buffer higher increases latency without any benefit. Setting it lower will introduce audible artifacts. 
+To simplify the setup the editor shows the actual buffer sizes (MIN/MAX/AVG) and indicates underruns by turning the display RED. 
+
+*Healthy Buffer:*
+
+![Image description](buffer-meter.png)
+
+
+*Buffer underrun*
+
+![Image description](buffer-underrun.png)
+
+
+
+This settings is configured for each device individually, so the next steps need te be repeated for each device. 
+
+Start with a relatively high buffer (512 or even 1024) and observe the buffer meters. Configure one of the sine waves and observe the meter for some time. 
+Initially some audible artifacts are possible, and the meter might indicate buffer overruns. But after a few seconds the results should stabilize. 
+If there are no buffer underruns lower the buffer size. And repeat the test.
+
+
+### Clock Drift Compensation 
+
+This setting has to be used very carefully. On the one hand side it will increase the CPU load on the other hand it can introduce audible artifacts. 
+If the application buffer needs to be set very high, to avoid buffer underruns. Activating clock drift compensation might help to reduce the latency. 
+
+For ASIO devices this should be used only as last resort with very low values (<30). <br>
+For WASAPI values up to 50 might work. 
+
 ## Simulator Selection
 
 Select the simulator which should be used as data source. Available options are:
@@ -114,19 +187,11 @@ Select the simulator which should be used as data source. Available options are:
 
 Whenever switching the simulator, irTactile has to be restarted. 
 
-## Channel Mapping
 
-![Image description](channel_assignment.png)
+## System Streams
 
-irTactile works like an audio mixer console. To get any output the available audio sources have to be routed to a channel of a specific audio device. 
-Even if there is only one physical device configured it is possible to define multiple channel mappings. But only the mapping which points to the currently configured audio device will be active. This allows simple switching between the mappings i.e. for testing without actually modifying the real mapping. 
+Out of the box ir tactile provides the following streams which can be assigned directly to channels or used as source in custom mix busses:
 
-Channel mapping not only allows to route a stream to a channel. It is also possible to apply filters and or mix multiple audio streams. More details are provided in the Audio Mixer section. 
-
-When mixing multiple streams the gain factors should be selected in a way that the individual streams are present in the final mix with the desired intensity while maintaining the overall signal strength at a reasonable level without introducing clipping. 
-
-
-Out of the box the following streams are provided:
 - **ABS_HR.\***: ABS signal.
   - ABS_HR.1: base frequency
   - ABS_HR.2: 2x base frequency
@@ -179,12 +244,25 @@ Out of the box the following streams are provided:
   - G_FORCES.4: unused
 
 
-Additional streams can be created in the Audio Mixer or by defining static streams. 
+  
+## Profiles
 
-**It is possible to provide more mappings than the channel number of the device. Again make sure that the real channels are referenced only once.**
+Profiles allow to organize the signal processing. For simple setups they are optional but are highly recommended for more complex solution. 
+
+irTactile allow the creation of an arbitrary number of profiles. Each profile has at least one collection. <br>
+A collection contains the following types:
+
+| Section        | Description                          |
+|------------------|--------------------------------------|
+| Inputs             | Streams where device input can be routed to  |
+| Mixer             | New audio streams   |
+| Generators             | Signal generators|
+| Templates             | Filter chain templates|
+
+## Input Streams
 
 
-## Audio Mixer 
+## Mixer 
 ![Image description](audio_streams.png)
 
 Audio Mixer allows creation of additional streams. Each stream is a mix of any other combination of input streams and filters. 
@@ -254,7 +332,7 @@ Values >1 will reduce the output volume of low amplitudes. Values < 1 will incre
 
 Filters can be activated/deactivated individually or the whole filter chain can turned on/off.
   
-## Custom Sources
+## Generators
 ![Image description](static_waves.png)
 
 In addition to custom mixes it is also possible to define static sinus wave which can be used as audio sources in any mix. 
@@ -267,55 +345,29 @@ Three types of sources are supported:
 - **Noise**: Pink/White Noise.
 - **Wav File**: Allows to play back a wav file. Only files with a sampling rate of 48Khz are supported.
 - 
-## Output Device Tuning
-After the initial device selection basic settings are applied which should work on most systems but thy are not offering the lowest possible latency. 
 
-irTactile provides the following tuning parameters:
-- Exclusive Mode (when WASAPI is being used)
-  - If enabled:
-    - Windows internal mixer is by-passed
-    - All audio enhancements are disabled (i.e. Equalizer APO)
-    - Audio volume is only controlled by irTactile
-  - Not supported by all devices
-- Device Buffer Size
-- Buffer Multiplier
-- Latency Compensation
+## Channel Mapping
+irTactile works like an audio mixer console. To get any output the available audio sources have to be routed to a output channel of a specific audio device and in case input channels are used those have to be routed to a corresponding input stream.
 
-![Image description](device_options.png)
 
-To achieve the lowest possible latency it is best to use ASIO if supported by the device. Second best option is WASAPI in exclusive mode. 
 
-Next step is to identify the lowest possible buffers sizes. The simplest solution is to connect head phones or loudspeakers to the sound card, route an audible test signal the correct channel and then observe the output. 
+![Image description](channel_assignment.png)
 
-### Device Buffer Tuning
+### Output Mapping
 
-Especially for ASIO devices it is important to select the correct device buffer size. But it applies to WASAPI mode as well.
+### Input Mapping
 
-1. Enable Demo Mode
-2. Configure a Simple Wav file with 50 Hz 
-3. Launch a game to simulate real system load
-4. Listen to the output
 
-Start with a buffer size of 32. If there are clicking noises repeat with the next higher size. 
+Even if there is only one physical device configured it is possible to define multiple channel mappings. But only the mapping which points to the currently configured audio device will be active. This allows simple switching between the mappings i.e. for testing without actually modifying the real mapping. 
 
-Important: For ASIO this number should be the same as it is configured for the output device in the ASIO driver. On some deviced this is setup  automatically when changing the buffer size in irTactile. Other devices require to set the buffer size manually.  
+Channel mapping not only allows to route a stream to a channel. It is also possible to apply filters and or mix multiple audio streams. More details are provided in the Audio Mixer section. 
 
-### Application Buffer Tuning
+When mixing multiple streams the gain factors should be selected in a way that the individual streams are present in the final mix with the desired intensity while maintaining the overall signal strength at a reasonable level without introducing clipping. 
 
-In a second step the application internal buffer size has to be selected. The is configured as a multiple of the device buffer size. 
 
-1. Enable Regular Mode
-2. Configure a Simple Wav file with 50 Hz 
-3. Launch a game
-4. Listen to the output
 
-The goal is to keep the buffer size as low as possible without introducing any clicking noises. A good starting point is a total buffer size at least 3 times the buffer size but not bigger than 400 bytes.
-I.e. If device buffer is 32, multiplicator 10 can be used. If device buffer is 64 a multiplicator of 5 can be used.  
 
-If there are clicking noises the buffer multiplicator has to be increased. If the output is clean the multiplicator can be reduced as long as there are no clicking noises. 
-
-If the total buffer needs to be increased above 400 byte, "Latency Compensation" can be enabled. For ASIO the values need to be kept very low 10%-20%. For WASAPI 10%-50% can be a valid range. But this has to be tested for each sound card individually    
-
+**It is possible to provide more mappings than the channel number of the device. Again make sure that the real channels are referenced only once.**
 
 ## Car specific configuration
 
