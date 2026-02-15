@@ -1,0 +1,29 @@
+<svg width="64" height="64" viewBox="0 0 64 64"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#0B0F1A"/>
+
+  <!-- Vibration ring -->
+  <circle cx="32" cy="32" r="20"
+          stroke="#7B61FF"
+          stroke-width="3"
+          fill="none"
+          opacity="0.9"/>
+
+  <!-- Simplified telemetry waveform -->
+  <path d="
+      M10 34
+      L20 34
+      L24 24
+      L30 42
+      L36 22
+      L42 38
+      L46 30
+      L54 34"
+      stroke="#00D4FF"
+      stroke-width="4"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+</svg>

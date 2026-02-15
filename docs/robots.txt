@@ -1,3 +1,4 @@
 User-agent: *
-Disallow: /irTactile/impressum
-Disallow: /irTactile/datenschutz
+Allow: /
+
+Sitemap: https://irtactile.com/sitemap.xml
